@@ -5,7 +5,7 @@
 #ifndef LOGIN_LOGIN_H
 #define LOGIN_LOGIN_H
 
-#include "common/cbasetypes.h"
+#include "common/hercules.h"
 #include "common/core.h" // CORE_ST_LAST
 #include "common/db.h"
 #include "common/mmo.h" // NAME_LENGTH,SEX_*
@@ -136,10 +136,6 @@ struct online_login_data {
 #define sex_str2num(str) ( ((str) == 'F') ? SEX_FEMALE : ((str) == 'M') ? SEX_MALE : SEX_SERVER )
 
 #define MAX_SERVERS 30
-#ifdef HERCULES_CORE
-extern struct mmo_char_server server[MAX_SERVERS];
-extern struct Login_Config login_config;
-#endif // HERCULES_CORE
 
 /**
  * Login.c Interface
@@ -210,10 +206,13 @@ struct login_interface {
 	char *LAN_CONF_NAME;
 };
 
-struct login_interface *login;
-
 #ifdef HERCULES_CORE
+extern struct mmo_char_server server[MAX_SERVERS];
+extern struct Login_Config login_config;
+
 void login_defaults(void);
 #endif // HERCULES_CORE
+
+HExport struct login_interface *login;
 
 #endif /* LOGIN_LOGIN_H */

@@ -5,7 +5,7 @@
 #ifndef COMMON_SOCKET_H
 #define COMMON_SOCKET_H
 
-#include "common/cbasetypes.h"
+#include "common/hercules.h"
 
 #ifdef WIN32
 #	include "common/winapi.h"
@@ -172,10 +172,13 @@ struct socket_interface {
 	struct socket_data **session;
 };
 
-struct socket_interface *sockt;
-
 #ifdef HERCULES_CORE
 void socket_defaults(void);
 #endif // HERCULES_CORE
+
+// This stays out of the interface.
+HExport struct socket_data **session;
+
+HExport struct socket_interface *sockt;
 
 #endif /* COMMON_SOCKET_H */

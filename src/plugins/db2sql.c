@@ -3,7 +3,7 @@
 
 #include "config/core.h"
 
-#include "common/HPMi.h"
+#include "common/hercules.h"
 #include "common/cbasetypes.h"
 #include "common/conf.h"
 #include "common/malloc.h"
@@ -141,7 +141,7 @@ int db2sql(config_setting_t *entry, int n, const char *source) {
 		StrBuf->Printf(&buf, "'%u',", it->flag.bindonequip?1:0);
 		
 		// forceserial
-        StrBuf->Printf(&buf, "'%u',", it->flag.force_serial?1:0);
+		StrBuf->Printf(&buf, "'%u',", it->flag.force_serial?1:0);
 		
 		// buyingstore
 		StrBuf->Printf(&buf, "'%u',", it->flag.buyingstore?1:0);
@@ -358,13 +358,6 @@ CMDLINEARG(db2sql)
 	return true;
 }
 HPExport void server_preinit (void) {
-	SQL = GET_SYMBOL("SQL");
-	itemdb = GET_SYMBOL("itemdb");
-	map = GET_SYMBOL("map");
-	strlib = GET_SYMBOL("strlib");
-	iMalloc = GET_SYMBOL("iMalloc");
-	libconfig = GET_SYMBOL("libconfig");
-	StrBuf = GET_SYMBOL("StrBuf");
 
 	addArg("--db2sql",false,db2sql,NULL);
 }
