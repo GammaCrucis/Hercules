@@ -22,9 +22,14 @@ struct HPluginData;
 
 // socket I/O macros
 #define RFIFOHEAD(fd)
-#define WFIFOHEAD(fd, size) do{ if((fd) && session[fd]->wdata_size + (size) > session[fd]->max_wdata ) sockt->realloc_writefifo((fd), (size)); }while(0)
-#define RFIFOP(fd,pos) (session[fd]->rdata + session[fd]->rdata_pos + (pos))
-#define WFIFOP(fd,pos) (session[fd]->wdata + session[fd]->wdata_size + (pos))
+#define WFIFOHEAD(fd, size) \
+	do{ \
+		if ((fd) && sockt->session[fd]->wdata_size + (size) > sockt->session[fd]->max_wdata) \
+			sockt->realloc_writefifo((fd), (size)); \
+	} while(0)
+
+#define RFIFOP(fd,pos) (sockt->session[fd]->rdata + sockt->session[fd]->rdata_pos + (pos))
+#define WFIFOP(fd,pos) (sockt->session[fd]->wdata + sockt->session[fd]->wdata_size + (pos))
 
 #define RFIFOB(fd,pos) (*(uint8*)RFIFOP((fd),(pos)))
 #define WFIFOB(fd,pos) (*(uint8*)WFIFOP((fd),(pos)))
@@ -34,18 +39,18 @@ struct HPluginData;
 #define WFIFOL(fd,pos) (*(uint32*)WFIFOP((fd),(pos)))
 #define RFIFOQ(fd,pos) (*(uint64*)RFIFOP((fd),(pos)))
 #define WFIFOQ(fd,pos) (*(uint64*)WFIFOP((fd),(pos)))
-#define RFIFOSPACE(fd) (session[fd]->max_rdata - session[fd]->rdata_size)
-#define WFIFOSPACE(fd) (session[fd]->max_wdata - session[fd]->wdata_size)
+#define RFIFOSPACE(fd) (sockt->session[fd]->max_rdata - sockt->session[fd]->rdata_size)
+#define WFIFOSPACE(fd) (sockt->session[fd]->max_wdata - sockt->session[fd]->wdata_size)
 
-#define RFIFOREST(fd)  (session[fd]->flag.eof ? 0 : session[fd]->rdata_size - session[fd]->rdata_pos)
+#define RFIFOREST(fd)  (sockt->session[fd]->flag.eof ? 0 : sockt->session[fd]->rdata_size - sockt->session[fd]->rdata_pos)
 #define RFIFOFLUSH(fd) \
 	do { \
-		if(session[fd]->rdata_size == session[fd]->rdata_pos){ \
-			session[fd]->rdata_size = session[fd]->rdata_pos = 0; \
+		if(sockt->session[fd]->rdata_size == sockt->session[fd]->rdata_pos){ \
+			sockt->session[fd]->rdata_size = sockt->session[fd]->rdata_pos = 0; \
 		} else { \
-			session[fd]->rdata_size -= session[fd]->rdata_pos; \
-			memmove(session[fd]->rdata, session[fd]->rdata+session[fd]->rdata_pos, session[fd]->rdata_size); \
-			session[fd]->rdata_pos = 0; \
+			sockt->session[fd]->rdata_size -= sockt->session[fd]->rdata_pos; \
+			memmove(sockt->session[fd]->rdata, sockt->session[fd]->rdata+sockt->session[fd]->rdata_pos, sockt->session[fd]->rdata_size); \
+			sockt->session[fd]->rdata_pos = 0; \
 		} \
 	} while(0)
 
@@ -53,7 +58,7 @@ struct HPluginData;
 #define RFIFOSKIP(fd, len) (sockt->rfifoskip(fd, len))
 
 /* [Ind/Hercules] */
-#define RFIFO2PTR(fd) (void*)(session[fd]->rdata + session[fd]->rdata_pos)
+#define RFIFO2PTR(fd) (void*)(sockt->session[fd]->rdata + sockt->session[fd]->rdata_pos)
 
 // buffer I/O macros
 #define RBUFP(p,pos) (((uint8*)(p)) + (pos))
@@ -120,11 +125,6 @@ struct hSockOpt {
 #define MAKEIP(a,b,c,d) ((uint32)( ( ( (a)&0xFF ) << 24 ) | ( ( (b)&0xFF ) << 16 ) | ( ( (c)&0xFF ) << 8 ) | ( ( (d)&0xFF ) << 0 ) ))
 
 /**
- * This stays out of the interface.
- **/
-struct socket_data **session;
-
-/**
  * Socket.c interface, mostly for reading however.
  **/
 struct socket_interface {
@@ -168,6 +168,8 @@ struct socket_interface {
 	int (*getips) (uint32* ips, int max);
 	/* */
 	void (*eof) (int fd);
+
+	struct socket_data **session;
 };
 
 struct socket_interface *sockt;
