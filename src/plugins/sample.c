@@ -91,7 +91,7 @@ void sample_packet0f3(int fd) {
 
 	clif->pGlobalMessage(fd,sd);
 }
-int my_pc_dropitem_storage;/* storage var */
+static int my_pc_dropitem_storage;/* storage var */
 /* my custom prehook for pc_dropitem, checks if amount of item being dropped is higher than 1 and if so cap it to 1 and store the value of how much it was */
 int my_pc_dropitem_pre(struct map_session_data *sd,int *n,int *amount) {
 	my_pc_dropitem_storage = 0;
@@ -111,20 +111,12 @@ int my_pc_dropitem_post(int retVal, struct map_session_data *sd,int *n,int *amou
 	}
 	return 1;
 }
-void parse_my_setting(const char *val) {
+static void parse_my_setting(const char *val) {
 	ShowDebug("Received 'my_setting:%s'\n",val);
 	/* do anything with the var e.g. config_switch(val) */
 }
 /* run when server starts */
 HPExport void plugin_init (void) {
-	/* core vars */
-
-	/* core interfaces */
-
-	/* map-server interfaces */
-
-	/* session[] */
-
 	ShowInfo ("Server type is ");
 
 	switch (SERVER_TYPE) {

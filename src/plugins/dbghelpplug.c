@@ -227,20 +227,20 @@ typedef struct _InternalData {
 /////////////////////////////////////////////////////////////////////
 // Global variables
 
-HANDLE dbghelp_dll = INVALID_HANDLE_VALUE;
-MINIDUMPWRITEDUMP MiniDumpWriteDump_ = NULL;
-SYMINITIALIZE SymInitialize_ = NULL;
-SYMSETOPTIONS SymSetOptions_ = NULL;
-SYMGETOPTIONS SymGetOptions_ = NULL;
-SYMCLEANUP SymCleanup_ = NULL;
-SYMGETTYPEINFO SymGetTypeInfo_ = NULL;
-SYMGETLINEFROMADDR SymGetLineFromAddr_ = NULL;
-SYMENUMSYMBOLS SymEnumSymbols_ = NULL;
-SYMSETCONTEXT SymSetContext_ = NULL;
-SYMFROMADDR SymFromAddr_ = NULL;
-STACKWALK StackWalk_ = NULL;
-SYMFUNCTIONTABLEACCESS SymFunctionTableAccess_ = NULL;
-SYMGETMODULEBASE SymGetModuleBase_ = NULL;
+static HANDLE dbghelp_dll = INVALID_HANDLE_VALUE;
+static MINIDUMPWRITEDUMP MiniDumpWriteDump_ = NULL;
+static SYMINITIALIZE SymInitialize_ = NULL;
+static SYMSETOPTIONS SymSetOptions_ = NULL;
+static SYMGETOPTIONS SymGetOptions_ = NULL;
+static SYMCLEANUP SymCleanup_ = NULL;
+static SYMGETTYPEINFO SymGetTypeInfo_ = NULL;
+static SYMGETLINEFROMADDR SymGetLineFromAddr_ = NULL;
+static SYMENUMSYMBOLS SymEnumSymbols_ = NULL;
+static SYMSETCONTEXT SymSetContext_ = NULL;
+static SYMFROMADDR SymFromAddr_ = NULL;
+static STACKWALK StackWalk_ = NULL;
+static SYMFUNCTIONTABLEACCESS SymFunctionTableAccess_ = NULL;
+static SYMGETMODULEBASE SymGetModuleBase_ = NULL;
 
 /////////////////////////////////////////////////////////////////////
 // Code
@@ -1721,7 +1721,7 @@ Dhp__CreateFiles(
 ///
 /// @param ptrs Exception information
 /// @return What to do with the exception
-LONG WINAPI
+static LONG WINAPI
 Dhp__UnhandledExceptionFilter(PEXCEPTION_POINTERS ptrs)
 {
 	char szLogFileName[MAX_PATH+1];

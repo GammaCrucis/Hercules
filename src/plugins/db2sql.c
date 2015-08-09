@@ -27,7 +27,7 @@ HPExport struct hplugin_info pinfo = {
 	HPM_VERSION,     // HPM Version (don't change, macro is automatically updated)
 };
 
-struct {
+static struct {
 	FILE *fp;
 	struct {
 		char *p;
@@ -35,11 +35,11 @@ struct {
 	} buf[4];
 	char *db_name;
 } tosql;
-bool torun = false;
+static bool torun = false;
 
-int (*itemdb_readdb_libconfig_sub) (config_setting_t *it, int n, const char *source);
+static int (*itemdb_readdb_libconfig_sub) (config_setting_t *it, int n, const char *source);
 
-void hstr(const char *str) {
+static void hstr(const char *str) {
 	if( strlen(str) > tosql.buf[3].len ) {
 		tosql.buf[3].len = tosql.buf[3].len + strlen(str) + 1000;
 		RECREATE(tosql.buf[3].p,char,tosql.buf[3].len);
@@ -237,7 +237,7 @@ int db2sql(config_setting_t *entry, int n, const char *source) {
 
 	return it?it->nameid:0;
 }
-void totable(void) {
+static void totable(void) {
 	fprintf(tosql.fp,
 			"-- NOTE: This file was auto-generated and should never be manually edited,\n"
 			"--       as it will get overwritten. If you need to modify this file,\n"
@@ -289,7 +289,7 @@ void totable(void) {
 			") ENGINE=MyISAM;\n"
 			"\n",tosql.db_name,tosql.db_name,tosql.db_name);
 }
-void do_db2sql(void) {
+static void do_db2sql(void) {
 	if( map->db_use_sql_item_db ) {
 		ShowInfo("db2sql: this should not be used with 'db_use_sql_item_db' enabled, skipping...\n");
 		return;
@@ -358,7 +358,6 @@ CMDLINEARG(db2sql)
 	return true;
 }
 HPExport void server_preinit (void) {
-
 	addArg("--db2sql",false,db2sql,NULL);
 }
 HPExport void plugin_init (void) {
