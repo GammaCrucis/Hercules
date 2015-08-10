@@ -5884,7 +5884,6 @@ void char_hp_symbols(void) {
 	HPM->share(loginif, "loginif");
 	HPM->share(mapif, "mapif");
 	HPM->share(pincode, "pincode");
-	HPM->share(inter->sql_handle, "sql_handle");
 }
 
 /**
