@@ -1966,11 +1966,6 @@ void do_shutdown_login(void)
 	}
 }
 
-void login_hp_symbols(void) {
-	HPM->share(account_db_sql_up(accounts),"sql_handle");
-	HPM->share(login,"login");
-}
-
 /**
  * --login-config handler
  *
@@ -2028,7 +2023,6 @@ int do_init(int argc, char** argv)
 	login->LAN_CONF_NAME   = aStrdup("conf/subnet.conf");
 
 	HPM_login_do_init();
-	HPM->symbol_defaults_sub = login_hp_symbols;
 	cmdline->exec(argc, argv, CMDLINE_OPT_PREINIT);
 	HPM->config_read();
 	HPM->event(HPET_PRE_INIT);
